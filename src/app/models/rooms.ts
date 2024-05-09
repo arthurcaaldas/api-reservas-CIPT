@@ -9,15 +9,11 @@ const Schema = new mongoose.Schema({
     type: mongoose.Schema.Types.String,
     required: true
   },
-  createdAt: {
-    type: mongoose.Schema.Types.Date,
-    default: Date.now()
-  },
   updatedAt: {
     type: mongoose.Schema.Types.Date,
     default: null
   },
-});
+}, { timestamps: { createdAt: 'createdAt' }});
 
 const Rooms = mongoose.model('Rooms', Schema);
 

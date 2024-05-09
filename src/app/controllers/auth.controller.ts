@@ -53,7 +53,6 @@ router.post('/authenticate', async (req, res) => {
       token: generateToken({ id: user.id })
     });
   } catch (err) {
-    console.log(err)
     res.status(400).send({ message: 'Falha ao tentar fazer login' });
   }
 });

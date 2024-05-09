@@ -27,6 +27,13 @@ router.get('/:id', authMiddleware, async (req, res) => {
 
 router.put('/:id', authMiddleware, async (req, res) => {
   try {
+    const { tokenPass } = req.body;
+
+    if (!tokenPass || tokenPass !== process.env.MASTER_PASSWORD)
+      return res
+      .sendStatus(401)
+      .send({ message: 'É necessário o token para criar usuário' });
+      
     const { id } = req.params;
 
     const response = req.body.password
@@ -41,6 +48,13 @@ router.put('/:id', authMiddleware, async (req, res) => {
 
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {
+    const { tokenPass } = req.body;
+
+    if (!tokenPass || tokenPass !== process.env.MASTER_PASSWORD)
+      return res
+      .sendStatus(401)
+      .send({ message: 'É necessário o token para deletar usuário' });
+
     const { id } = req.params;
     await Users.findByIdAndDelete(id);
     return res.send();
@@ -49,8 +63,15 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   }
 });
 
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
+    const { tokenPass } = req.body;
+
+    if (!tokenPass || tokenPass !== process.env.MASTER_PASSWORD)
+      return res
+      .sendStatus(401)
+      .send({ message: 'É necessário o token para criar usuário' });
+
     const payload = { ...req.body, password: await bcrypt.hash(req.body.password, 10) }
     const response = await Users.create(payload);
     (response as any).password = undefined;

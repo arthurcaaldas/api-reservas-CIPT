@@ -31,11 +31,11 @@ const Schema = new mongoose.Schema({
     type: mongoose.Schema.Types.Date,
     required: true
   },
-  createdAt: {
+  updatedAt: {
     type: mongoose.Schema.Types.Date,
-    default: Date.now()
+    default: null
   }
-});
+}, { timestamps: { createdAt: 'createdAt' }});
 
 const Reservations = mongoose.model('Reservations', Schema);
 
