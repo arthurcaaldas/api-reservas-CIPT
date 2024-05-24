@@ -49,7 +49,6 @@ router.put('/:id', authMiddleware, async (req, res) => {
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {
     const { tokenPass } = req.body;
-
     if (!tokenPass || tokenPass !== process.env.MASTER_PASSWORD)
       return res
       .sendStatus(401)
@@ -65,12 +64,16 @@ router.delete('/:id', authMiddleware, async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { tokenPass } = req.body;
+    const { tokenPass, email } = req.body;
 
     if (!tokenPass || tokenPass !== process.env.MASTER_PASSWORD)
       return res
       .sendStatus(401)
       .send({ message: 'É necessário o token para criar usuário' });
+
+    const hasUser = await Users.findOne({ email });
+
+    if (hasUser) return res.status(401).send({ message: 'Usuário já existe!' })
 
     const payload = { ...req.body, password: await bcrypt.hash(req.body.password, 10) }
     const response = await Users.create(payload);
